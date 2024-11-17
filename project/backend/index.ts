@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
 
 console.log("Trying to get the appp running: ", port)
 

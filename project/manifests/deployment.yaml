@@ -13,4 +13,7 @@ spec:
     spec:
       containers:
       - name: todo-backend
-        image: aaartyoms/todo-project-backend
+        image: aaartyoms/todo-project-backend:0.0.1
+        env:
+        - name: PORT
+          value: "3000"

@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mylog
+  name: ping-pong
 spec:
   selector:
     matchLabels:
-      app: mylog
+      app: ping-pong
   template:
     metadata:
       labels:
-        app: mylog
+        app: ping-pong
     spec:
       containers:
-      - name: mylog
-        image: aaartyoms/logger-img:0.0.4v
+      - name: ping-pong
+        image: aaartyoms/ping-pong:0.0.4v
         imagePullPolicy: IfNotPresent
         resources:
           limits:
