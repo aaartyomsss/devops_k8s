@@ -1,28 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ping-pong
+  name: mylog
 spec:
   selector:
     matchLabels:
-      app: ping-pong
+      app: mylog
   template:
     metadata:
       labels:
-        app: ping-pong
+        app: mylog
     spec:
       volumes: # Define volume
         - name: shared-log
           persistentVolumeClaim:
             claimName: mypvc-claim
       containers:
-      - name: ping-pong
-        image: aaartyoms/ping-pong:0.0.7v
+      - name: mylog
+        image: aaartyoms/logger-reader:0.0.5v
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - name: shared-log
             mountPath: /usr/src/app/files
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+      - name: log-writer
+        image: aaartyoms/logger-writer:0.0.3v
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: shared-log
+            mountPath: /usr/src/app/files
