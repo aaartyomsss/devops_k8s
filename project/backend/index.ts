@@ -1,8 +1,8 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import path from 'path'
-import fs from 'fs'
-import axios from 'axios'
+import express from "express"
+import dotenv from "dotenv"
+import path from "path"
+import fs from "fs"
+import axios from "axios"
 
 const directory = path.join(__dirname, "usr", "src", "app", "files")
 const filePath = path.join(directory, "img.jpg")
@@ -15,23 +15,22 @@ const port = process.env.PORT ? parseInt(process.env.PORT) : 4000
 
 console.log("Trying to get the appp running: ", port)
 
-
 const fetchImage = async () => {
-  const res = await axios.get('https://picsum.photos/1200', {
-    responseType: 'stream'
+  const res = await axios.get("https://picsum.photos/1200", {
+    responseType: "stream",
   })
-  const dir = path.dirname(filePath);
+  const dir = path.dirname(filePath)
   console.log("!!!!!!!!!!!!!!!!! ", dir)
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(dir, { recursive: true })
   }
-  const writer = fs.createWriteStream(filePath);
-  res.data.pipe(writer);
+  const writer = fs.createWriteStream(filePath)
+  res.data.pipe(writer)
 
   await new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
+    writer.on("finish", resolve)
+    writer.on("error", reject)
+  })
 }
 
 const validateImageExistance = async () => {
@@ -46,7 +45,7 @@ const validateImageExistance = async () => {
   }
 }
 
-app.get('/', async (_req, res) => {
+app.get("/api", async (_req, res) => {
   await validateImageExistance()
   res.sendFile(filePath)
 })
