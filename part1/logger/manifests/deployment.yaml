@@ -16,15 +16,15 @@ spec:
           persistentVolumeClaim:
             claimName: mypvc-claim
       containers:
-      - name: mylog
-        image: aaartyoms/logger-reader:0.0.5v
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - name: shared-log
-            mountPath: /usr/src/app/files
-      - name: log-writer
-        image: aaartyoms/logger-writer:0.0.3v
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - name: shared-log
-            mountPath: /usr/src/app/files
+        - name: mylog
+          image: aaartyoms/logger-reader:0.0.7v
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: shared-log
+              mountPath: /usr/src/app/files
+        - name: log-writer
+          image: aaartyoms/logger-writer:0.0.3v
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: shared-log
+              mountPath: /usr/src/app/files

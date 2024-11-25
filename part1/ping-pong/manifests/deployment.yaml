@@ -16,13 +16,13 @@ spec:
           persistentVolumeClaim:
             claimName: mypvc-claim
       containers:
-      - name: ping-pong
-        image: aaartyoms/ping-pong:0.0.7v
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - name: shared-log
-            mountPath: /usr/src/app/files
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+        - name: ping-pong
+          image: aaartyoms/ping-pong:0.0.8v
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: shared-log
+              mountPath: /usr/src/app/files
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

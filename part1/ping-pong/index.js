@@ -7,21 +7,28 @@ const filePath = path.join(directory, "count.txt")
 
 const app = express()
 const port = 4000
+let count = 0
+
+// TODO: Deprecated as per 2.01 instructions
+// const getCount = () => {
+//   try {
+//     const file = fs.readFileSync(filePath, { encoding: "utf-8" })
+//     return file
+//   } catch (error) {
+//     console.log(error)
+//     return "0"
+//   }
+// }
 
 const getCount = () => {
-  try {
-    const file = fs.readFileSync(filePath, { encoding: "utf-8" })
-    return file
-  } catch (error) {
-    console.log(error)
-    return "0"
-  }
+  return count
 }
 
 const writeCount = () => {
   console.log("Generating!")
-  const currentCount = parseInt(getCount())
-  fs.writeFileSync(filePath, `${currentCount + 1}`, { encoding: "utf-8" })
+  const currentCount = getCount()
+  count++
+  // fs.writeFileSync(filePath, `${currentCount + 1}`, { encoding: "utf-8" })
   return currentCount
 }
 

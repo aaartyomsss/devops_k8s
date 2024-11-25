@@ -15,15 +15,20 @@ const getStamp = () => {
   return file
 }
 
-const getCount = () => {
-  const file = fs.readFileSync(countPath, { encoding: "utf-8" })
-  return file
+const getCount = async () => {
+  console.log("Calling get count ! ! ! !")
+  const res = await fetch("http://ping-pong-svc:4444/pingpong")
+  console.log("Got response: ", res)
+  const json = await res.json()
+  // const file = fs.readFileSync(countPath, { encoding: "utf-8" })
+  console.log("Json: ", json)
+  return json
 }
 
-app.get("/", (_req, res) => {
+app.get("/", async (_req, res) => {
   console.log("Getting a string from file")
   const string = getStamp()
-  const count = getCount()
+  const count = await getCount()
   console.log("Got string from file: ", string)
   const _res = `${string} \n Ping / Pongs ${count}`
   res.send(_res)
