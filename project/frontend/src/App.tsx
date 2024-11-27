@@ -1,16 +1,28 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import "./App.css"
+import axios from "axios"
 
 type Todo = {
-  title: string
+  id: string
+  name: string
 }
 
 function App() {
   const [todoInput, setTodoInput] = useState("")
-  const [todos, _setTodos] = useState<Todo[]>([
-    { title: "Title of todo" },
-    { title: "Laundry" },
-  ])
+  const [todos, setTodos] = useState<Todo[]>([])
+
+  useEffect(() => {
+    const getAndSetTodos = async () => {
+      const res = await axios.get<Todo[]>("/api/todos")
+      setTodos(res.data)
+    }
+    getAndSetTodos()
+  }, [])
+
+  const postTodo = async () => {
+    const res = await axios.post<Todo>("/api/todos", { name: todoInput })
+    setTodos([res.data, ...todos])
+  }
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -20,13 +32,13 @@ function App() {
   }
 
   const renderTodos = () => {
-    return todos.map((t) => <li key={t.title}>{t.title}</li>)
+    return todos.map((t) => <li key={t.id}>{t.name}</li>)
   }
 
   return (
     <div>
       <input onChange={onChange} value={todoInput} />
-      <button>Add todo</button>
+      <button onClick={postTodo}>Add todo</button>
       <ul>{renderTodos()}</ul>
     </div>
   )
