@@ -16,13 +16,18 @@ spec:
         - name: shared-log
           persistentVolumeClaim:
             claimName: mypvc-claim
+        - name: config
+          configMap:
+            name: log-config-map
       containers:
         - name: mylog
-          image: aaartyoms/logger-reader:0.0.7v
+          image: aaartyoms/logger-reader:0.0.9v
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: shared-log
               mountPath: /usr/src/app/files
+            - name: config
+              mountPath: /usr/src/app/config
         - name: log-writer
           image: aaartyoms/logger-writer:0.0.3v
           imagePullPolicy: IfNotPresent
