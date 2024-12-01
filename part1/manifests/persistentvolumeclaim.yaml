@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mypvc-claim
+  namespace: small-apps
 spec:
   storageClassName: sample-persistent-volume
   accessModes:
