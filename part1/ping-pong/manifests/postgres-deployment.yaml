@@ -1,32 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ping-pong
+  name: postgres
   namespace: small-apps
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: ping-pong
+      app: postgres
   template:
     metadata:
       labels:
-        app: ping-pong
+        app: postgres
     spec:
-      volumes: # Define volume
-        - name: shared-log
-          persistentVolumeClaim:
-            claimName: mypvc-claim
       containers:
-        - name: ping-pong
-          image: aaartyoms/ping-pong:0.0.19v
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: shared-log
-              mountPath: /usr/src/app/files
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -43,3 +34,14 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_DB
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-ping-pong-volume-claim
