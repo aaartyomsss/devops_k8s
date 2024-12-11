@@ -6,6 +6,8 @@ import axios from "axios"
 import crypto from "crypto"
 import cors from "cors"
 import bodyParser from "body-parser"
+import client from "./db"
+import { addTodoQuery, getAllTodosQuery } from "./queries/todo"
 
 const directory = path.join(__dirname, "usr", "src", "app", "files")
 const filePath = path.join(directory, "img.jpg")
@@ -20,18 +22,17 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT ? parseInt(process.env.PORT) : 4000
 
-let HARDCODED_TODOS = [
-  {
-    id: crypto.randomUUID(),
-    name: "First todo",
-  },
-  {
-    id: crypto.randomUUID(),
-    name: "Second todo",
-  },
-]
+console.log("Here we have it ? ? ?? ? ")
 
-console.log("Trying to get the appp running: ", port)
+client.query("SELECT NOW()", (err, res) => {
+  if (err) {
+    console.error("Error connecting to the database:", err)
+  } else {
+    console.log("Database connection successful:", res.rows[0])
+  }
+})
+
+console.log("Past it")
 
 // Not the safest config, but good enough for now
 app.use(cors())
@@ -72,15 +73,18 @@ app.get("/api", async (_req, res) => {
 })
 
 app.get("/api/todos", async (_res, res) => {
-  res.json(HARDCODED_TODOS)
+  const todos = await client.query<{ id: number; text: string }>(
+    getAllTodosQuery()
+  )
+  res.json(todos.rows)
 })
 
 app.post("/api/todos", async (req: Request<{}, {}, PostTodo>, res) => {
   const todo = req.body.name
-  const newTodo = { id: crypto.randomUUID(), name: todo }
-  HARDCODED_TODOS = [newTodo, ...HARDCODED_TODOS]
-
-  res.json(newTodo)
+  const rows = await client.query<{ id: number; text: string }>(
+    addTodoQuery(todo)
+  )
+  res.json(rows.rows[0])
 })
 
 app.listen(port, () => {

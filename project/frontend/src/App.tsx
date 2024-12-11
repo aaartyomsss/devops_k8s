@@ -3,8 +3,8 @@ import "./App.css"
 import axios from "axios"
 
 type Todo = {
-  id: string
-  name: string
+  id: number
+  text: string
 }
 
 function App() {
@@ -32,7 +32,7 @@ function App() {
   }
 
   const renderTodos = () => {
-    return todos.map((t) => <li key={t.id}>{t.name}</li>)
+    return todos.map((t) => <li key={t.id}>{t.text}</li>)
   }
 
   return (

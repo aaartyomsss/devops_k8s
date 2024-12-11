@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-project
+  name: postgres
   namespace: todo-ns
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: todo-project
+      app: postgres
   template:
     metadata:
       labels:
-        app: todo-project
+        app: postgres
     spec:
       containers:
-        - name: todo-backend
-          image: aaartyoms/todo-project-backend:0.0.10v
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
           env:
-            - name: PORT
-              value: "3000"
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -33,5 +34,14 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_DB
-        - name: todo-frontend
-          image: aaartyoms/todo-project-frontend:0.0.7v
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-todo-volume-claim
