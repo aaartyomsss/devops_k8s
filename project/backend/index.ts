@@ -22,21 +22,17 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT ? parseInt(process.env.PORT) : 4000
 
-console.log("Here we have it ? ? ?? ? ")
-
-client.query("SELECT NOW()", (err, res) => {
-  if (err) {
-    console.error("Error connecting to the database:", err)
-  } else {
-    console.log("Database connection successful:", res.rows[0])
-  }
-})
-
-console.log("Past it")
-
 // Not the safest config, but good enough for now
 app.use(cors())
 app.use(bodyParser.json())
+app.use((req, res, next) => {
+  if (req.method === "POST") {
+    console.log("----- TODO POSTED -----")
+    console.log(req.body)
+    console.log("-----------------------")
+  }
+  next()
+})
 
 const fetchImage = async () => {
   const res = await axios.get("https://picsum.photos/1200", {
@@ -81,6 +77,10 @@ app.get("/api/todos", async (_res, res) => {
 
 app.post("/api/todos", async (req: Request<{}, {}, PostTodo>, res) => {
   const todo = req.body.name
+  if (todo.length > 140) {
+    res.status(400).json({ error: "Too long of a todo name" })
+    return
+  }
   const rows = await client.query<{ id: number; text: string }>(
     addTodoQuery(todo)
   )
