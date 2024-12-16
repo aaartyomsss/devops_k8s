@@ -12,21 +12,14 @@ spec:
       labels:
         app: ping-pong
     spec:
-      volumes: # Define volume
-        - name: shared-log
-          persistentVolumeClaim:
-            claimName: mypvc-claim
       containers:
         - name: ping-pong
           image: aaartyoms/ping-pong:0.0.19v
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: shared-log
-              mountPath: /usr/src/app/files
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"
           env:
             - name: POSTGRES_USER
               valueFrom:
