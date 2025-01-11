@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: aaartyoms/ping-pong:0.0.19v
+          image: aaartyoms/ping-pong:0.0.20v
           imagePullPolicy: IfNotPresent
           # resources:
           #   limits:

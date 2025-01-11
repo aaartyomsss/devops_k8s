@@ -4,7 +4,7 @@ metadata:
   name: sample-persistent-volume
   namespace: small-apps
 spec:
-  storageClassName: sample-persistent-volume
+  storageClassName: standard
   capacity:
     storage: 1Gi
   volumeMode: Filesystem
@@ -12,11 +12,11 @@ spec:
     - ReadWriteOnce
   local:
     path: /tmp/kube
-  nodeAffinity: ## This is only required for local, it defines which nodes can access it
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - k3d-k3s-default-agent-0
+  # nodeAffinity: ## This is only required for local, it defines which nodes can access it
+  #   required:
+  #     nodeSelectorTerms:
+  #       - matchExpressions:
+  #           - key: kubernetes.io/hostname
+  #             operator: In
+  #             values:
+  #               - k3d-k3s-default-agent-0

@@ -66,6 +66,10 @@ app.get("/pingpong", async (_req, res) => {
   res.send(`${count}`)
 })
 
+app.get("/", async (_, res) => {
+  res.status(200).end()
+})
+
 app.listen(port, () => {
   console.log(`Server started in port ${port}`)
 })

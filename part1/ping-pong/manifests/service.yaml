@@ -4,11 +4,11 @@ metadata:
   name: ping-pong-svc
   namespace: small-apps
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: ping-pong
   ports:
-    - port: 80
+    - port: 4444
       protocol: TCP
       targetPort: 4000
 ---

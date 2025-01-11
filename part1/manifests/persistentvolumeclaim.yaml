@@ -4,7 +4,7 @@ metadata:
   name: mypvc-claim
   namespace: small-apps
 spec:
-  storageClassName: sample-persistent-volume
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:
