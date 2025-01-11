@@ -4,7 +4,7 @@ metadata:
   name: todo-project-pvc-claim
   namespace: todo-ns
 spec:
-  storageClassName: todo-project-persistent-volume
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:
@@ -24,4 +24,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi

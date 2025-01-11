@@ -1,0 +1,76 @@
+name: Release application
+
+on:
+  push:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-b
+  BACKEND_IMAGE: todo-project-backend
+  FRONTEND_IMAGE: todo-project-frontend
+  BRANCH: ${{ github.ref_name }}
+  AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+    environment: main
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GKE_SA_KEY }}"
+
+      - name: "Set up Cloud SDK"
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: "Use gcloud CLI"
+        run: gcloud info
+
+      - name: "Configure GCR"
+        run: gcloud --quiet auth configure-docker
+
+      - name: "Get GKE credentials"
+        uses: "google-github-actions/get-gke-credentials@v2"
+        with:
+          cluster_name: "${{ env.GKE_CLUSTER }}"
+          project_id: "${{ env.PROJECT_ID }}"
+          location: "${{ env.GKE_ZONE }}"
+
+      - name: "Build backend"
+        run: docker build -f ./project/backend/Dockerfile -t "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" ./project/backend
+
+      - name: "Build frontend"
+        run: docker build -f ./project/frontend/Dockerfile -t "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA" ./project/frontend
+
+      - name: "Publish images"
+        run: docker push "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" && docker push "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA"
+
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v2.1.0
+
+      - name: Setup SOPS
+        uses: nhedger/setup-sops@v2
+
+      - name: Run SOPS
+        run: sops --version
+
+      - name: Create key file and export it as env variable for SOPS decryption and decrypt the secret
+        run: |-
+          touch key.txt
+          echo "$AGE_SECRET_KEY" > key.txt
+          export SOPS_AGE_KEY_FILE=$(pwd)/key.txt
+          sops --decrypt ./project/manifests/secret.enc.yaml > ./project/manifests/secret.yaml
+
+      - name: "Deploy"
+        run: |-
+          kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
+          kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
+          kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment -n todo-ns
+          kubectl get services -o wide

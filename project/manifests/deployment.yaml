@@ -14,11 +14,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: aaartyoms/todo-project-backend:0.0.11v
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+          image: PROJECT/BACKEND-IMAGE
           env:
             - name: PORT
               value: "3000"
@@ -38,8 +34,4 @@ spec:
                   name: postgres-secret
                   key: POSTGRES_DB
         - name: todo-frontend
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
-          image: aaartyoms/todo-project-frontend:0.0.7v
+          image: PROJECT/FRONTEND-IMAGE

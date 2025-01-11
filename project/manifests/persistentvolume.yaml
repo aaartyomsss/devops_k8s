@@ -9,7 +9,7 @@ spec:
     storage: 1Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   local:
     path: /tmp/kube
   nodeAffinity: ## This is only required for local, it defines which nodes can access it
@@ -31,8 +31,8 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 10Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: /data/postgresql
+    path: /var/lib/postgresql/data
