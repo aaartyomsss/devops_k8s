@@ -39,8 +39,5 @@ jobs:
           project_id: "${{ env.PROJECT_ID }}"
           location: "${{ env.GKE_ZONE }}"
 
-      - name: Check kubectl connection
-        run: kubectl cluster-info
-
       - name: "Delete feature"
-        run: kubectl delete namespace ${GITHUB_REF#refs/heads/}
+        run: kubectl delete namespace ${GITHUB_EVENT_REF#refs/heads/}
