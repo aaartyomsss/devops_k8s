@@ -35,6 +35,13 @@ jobs:
       - name: "Configure GCR"
         run: gcloud --quiet auth configure-docker
 
+      - name: "Get GKE credentials"
+        uses: "google-github-actions/get-gke-credentials@v2"
+        with:
+          cluster_name: "${{ env.GKE_CLUSTER }}"
+          project_id: "${{ env.PROJECT_ID }}"
+          location: "${{ env.GKE_ZONE }}"
+
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
