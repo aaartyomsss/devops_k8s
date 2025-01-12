@@ -40,4 +40,5 @@ jobs:
 
       - name: "Delete feature"
         run: |-
+          kubectl get namespace
           kubectl delete namespace ${GITHUB_REF#refs/heads/}
