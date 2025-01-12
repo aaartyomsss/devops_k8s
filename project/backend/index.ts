@@ -63,6 +63,11 @@ const validateImageExistance = async () => {
   }
 }
 
+// Health check endpoint
+app.get("/", async (_, res) => {
+  res.status(200).end()
+})
+
 app.get("/api", async (_req, res) => {
   await validateImageExistance()
   res.sendFile(filePath)
