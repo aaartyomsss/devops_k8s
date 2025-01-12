@@ -67,8 +67,21 @@ jobs:
           export SOPS_AGE_KEY_FILE=$(pwd)/key.txt
           sops --decrypt ./project/manifests/secret.enc.yaml > ./project/manifests/secret.yaml
 
-      - name: "Deploy"
+      - name: "Deploy main"
+        if: github.ref_name == 'main'
         run: |-
+          kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
+          kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
+          kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment -n todo-ns
+          kubectl get services -o wide
+
+      - name: "Deploy feature"
+        if: github.ref_name != 'main'
+        run: |-
+          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
+          kustomize edit set namespace ${GITHUB_REF#refs/heads/}
           kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
