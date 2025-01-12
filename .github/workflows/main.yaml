@@ -2,7 +2,6 @@ name: Release application
 
 on:
   push:
-  delete:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
@@ -75,7 +74,7 @@ jobs:
           sops --decrypt ./project/manifests/secret.enc.yaml > ./project/manifests/secret.yaml
 
       - name: "Deploy main"
-        if: github.ref_name == 'main' && github.event_name == 'push'
+        if: github.ref_name == 'main'
         run: |-
           kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
@@ -84,7 +83,7 @@ jobs:
           kubectl get services -o wide
 
       - name: "Deploy feature"
-        if: github.ref_name != 'main' && github.event_name == 'push'
+        if: github.ref_name != 'main'
         run: |-
           kubectl create namespace ${GITHUB_REF#refs/heads/} || true
           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
@@ -94,8 +93,3 @@ jobs:
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment -n todo-ns
           kubectl get services -o wide
-
-      - name: "Delete feature"
-        if: github.ref_name != 'main' && github.event_name == 'delete'
-        run: |-
-          kubectl delete namespace ${GITHUB_REF#refs/heads/}
