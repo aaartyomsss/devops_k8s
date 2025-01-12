@@ -42,10 +42,8 @@ jobs:
           project_id: "${{ env.PROJECT_ID }}"
           location: "${{ env.GKE_ZONE }}"
 
-      - name: Set up Kustomize
-        uses: imranismail/setup-kustomize@v2.1.0
+      - name: List namespaces
+        run: kubectl get namespace
 
       - name: "Delete feature"
-        run: |-
-          kubectl get namespace
-          kubectl delete namespace ${GITHUB_REF#refs/heads/}
+        run: kubectl delete namespace ${GITHUB_REF#refs/heads/}
