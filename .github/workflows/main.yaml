@@ -44,24 +44,30 @@ jobs:
           location: "${{ env.GKE_ZONE }}"
 
       - name: "Build backend"
+        if: github.event_name == 'push'
         run: docker build -f ./project/backend/Dockerfile -t "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" ./project/backend
 
       - name: "Build frontend"
+        if: github.event_name == 'push'
         run: docker build -f ./project/frontend/Dockerfile -t "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA" ./project/frontend
 
       - name: "Publish images"
+        if: github.event_name == 'push'
         run: docker push "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" && docker push "gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA"
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
       - name: Setup SOPS
+        if: github.event_name == 'push'
         uses: nhedger/setup-sops@v2
 
       - name: Run SOPS
+        if: github.event_name == 'push'
         run: sops --version
 
       - name: Create key file and export it as env variable for SOPS decryption and decrypt the secret
+        if: github.event_name == 'push'
         run: |-
           touch key.txt
           echo "$AGE_SECRET_KEY" > key.txt
@@ -92,9 +98,4 @@ jobs:
       - name: "Delete feature"
         if: github.ref_name != 'main' && github.event_name == 'delete'
         run: |-
-          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
-          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
-          kustomize edit set namespace ${GITHUB_REF#refs/heads/}
-          kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
-          kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
-          kubectl delete -k .
+          kubectl delete namespace ${GITHUB_REF#refs/heads/}
