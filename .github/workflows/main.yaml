@@ -79,7 +79,7 @@ jobs:
           kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment -n todo-ns
+          kubectl rollout status deployment
           kubectl get services -o wide
 
       - name: "Deploy feature"
@@ -91,5 +91,5 @@ jobs:
           kustomize edit set image PROJECT/BACKEND-IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image PROJECT/FRONTEND-IMAGE=gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment -n todo-ns
+          kubectl rollout status deployment
           kubectl get services -o wide
