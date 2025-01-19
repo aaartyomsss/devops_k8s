@@ -17,7 +17,7 @@ spec:
           resources:
             limits:
               cpu: "150m"
-              memory: "512Mi"
+              memory: "1024Mi"
           env:
             - name: PORT
               value: "3000"
@@ -41,4 +41,4 @@ spec:
           resources:
             limits:
               cpu: "150m"
-              memory: "512Mi"
+              memory: "1024Mi"
