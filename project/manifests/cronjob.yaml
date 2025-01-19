@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: todo-inserter-ns
 spec:
-  schedule: "0 * * * *"
+  schedule: "*/2 * * * *"
   jobTemplate:
     spec:
       template:
@@ -32,6 +32,15 @@ spec:
                   "-c",
                   "apk add --no-cache postgresql-client && \
                   export PGPASSWORD=$POSTGRES_PASSWORD && \
-                  psql -h postgres-service -U $POSTGRES_USER -d $POSTGRES_DB -c \"INSERT INTO todo (text) VALUES ('https://en.wikipedia.org/wiki/Special:Random');\"",
+                  pg_dump -h postgres-service -U $POSTGRES_USER -d $POSTGRES_DB > /backup/db-backups.sql && \
+                  gcloud auth activate-service-account --key-file=/etc/gcs-key/key.json && \
+                  gcloud storage cp /backup/db-backup.sql gs://backups-for-db/db-backup-$(date +%Y%m%d%H%M%S).sql
+                  ",
                 ]
+              volumeMounts:
+                - name: gcs-key
+                  mountPath: /etc/gcs-key
+                  readOnly: true
+                - name: backup-volume
+                  mountPath: /backup
           restartPolicy: OnFailure
