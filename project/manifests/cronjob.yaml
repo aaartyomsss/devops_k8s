@@ -34,16 +34,24 @@ spec:
                   apk add --no-cache postgresql-client
                   export PGPASSWORD=$POSTGRES_PASSWORD
                   apk add --no-cache bash curl python3 py3-crcmod libc6-compat
+                  echo "Before"
                   GCLOUD_VERSION=503.0.0
+                  echo "After env variable"
                   curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
                   tar -xzf google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
                   mv google-cloud-sdk /usr/local/google-cloud-sdk
                   rm google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
+                  echo "Pre install"
                   /usr/local/google-cloud-sdk/install.sh --quiet
+                  echo "After"
                   export PATH="/usr/local/google-cloud-sdk/bin:$PATH"
+                  echo "Export path"
                   pg_dump -h postgres-service -U $POSTGRES_USER -d $POSTGRES_DB > /backup/db-backups.sql
+                  echo "After dump"
                   gcloud auth activate-service-account --key-file=/etc/gcs-key/key.json
+                  echo "Account activated"
                   gcloud storage cp /backup/db-backup.sql gs://backups-for-db/db-backup-$(date +%Y%m%d%H%M%S).sql
+                  echo "Done"
               volumeMounts:
                 - name: gcs-key
                   mountPath: /etc/gcs-key
