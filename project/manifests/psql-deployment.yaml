@@ -17,8 +17,8 @@ spec:
           image: postgres:15
           resources:
             limits:
-              cpu: "800m"
-              memory: "600Mi"
+              cpu: "1500m"
+              memory: "2000Mi"
           ports:
             - containerPort: 5432
           env:
