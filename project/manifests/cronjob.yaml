@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: todo-inserter-ns
 spec:
-  schedule: "*/2 * * * *"
+  schedule: "*/5 * * * *"
   jobTemplate:
     spec:
       template:
@@ -30,19 +30,20 @@ spec:
               command:
                 - sh
                 - -c
-                - apk add --no-cache postgresql-client
-                - export PGPASSWORD=$POSTGRES_PASSWORD
-                - apk add --no-cache bash curl python3 py3-crcmod libc6-compat
-                - ENV GCLOUD_VERSION=503.0.0
-                - curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
-                - tar -xzf google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
-                - mv google-cloud-sdk /usr/local/google-cloud-sdk
-                - rm google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
-                - /usr/local/google-cloud-sdk/install.sh --quiet
-                - export PATH="/usr/local/google-cloud-sdk/bin:$PATH"
-                - pg_dump -h postgres-service -U $POSTGRES_USER -d $POSTGRES_DB > /backup/db-backups.sql
-                - gcloud auth activate-service-account --key-file=/etc/gcs-key/key.json
-                - gcloud storage cp /backup/db-backup.sql gs://backups-for-db/db-backup-$(date +%Y%m%d%H%M%S).sql
+                - |
+                  apk add --no-cache postgresql-client
+                  export PGPASSWORD=$POSTGRES_PASSWORD
+                  apk add --no-cache bash curl python3 py3-crcmod libc6-compat
+                  GCLOUD_VERSION=503.0.0
+                  curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
+                  tar -xzf google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
+                  mv google-cloud-sdk /usr/local/google-cloud-sdk
+                  rm google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
+                  /usr/local/google-cloud-sdk/install.sh --quiet
+                  export PATH="/usr/local/google-cloud-sdk/bin:$PATH"
+                  pg_dump -h postgres-service -U $POSTGRES_USER -d $POSTGRES_DB > /backup/db-backups.sql
+                  gcloud auth activate-service-account --key-file=/etc/gcs-key/key.json
+                  gcloud storage cp /backup/db-backup.sql gs://backups-for-db/db-backup-$(date +%Y%m%d%H%M%S).sql
               volumeMounts:
                 - name: gcs-key
                   mountPath: /etc/gcs-key
