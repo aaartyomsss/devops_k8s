@@ -8,7 +8,7 @@ resources:
   - project/manifests/psql-deployment.yaml
   - project/manifests/service.yaml
   - project/manifests/secret.yaml
-  - project/manifests/cronjob.yaml
+  # - project/manifests/cronjob.yaml
 
 images:
   - name: PROJECT/BACKEND-IMAGE
