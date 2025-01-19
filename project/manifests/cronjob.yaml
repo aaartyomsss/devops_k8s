@@ -31,6 +31,7 @@ spec:
                 - sh
                 - -c
                 - |
+                  apk update || exit 1
                   apk add --no-cache postgresql-client
                   export PGPASSWORD=$POSTGRES_PASSWORD
                   apk add --no-cache bash curl python3 py3-crcmod libc6-compat
