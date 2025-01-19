@@ -43,4 +43,10 @@ spec:
                   readOnly: true
                 - name: backup-volume
                   mountPath: /backup
+          volumes:
+            - name: gcs-key
+              secret:
+                secretName: gcs-key
+            - name: backup-volume
+              emptyDir: {}
           restartPolicy: OnFailure
