@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: todo-inserter-ns
-              image: alpine:3.17
+              image: google/cloud-sdk:latest
               env:
                 - name: POSTGRES_USER
                   valueFrom:
