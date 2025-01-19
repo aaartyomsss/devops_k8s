@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: todo-inserter-ns
-              image: google/cloud-sdk:503.0.0-stable
+              image: google/cloud-sdk:506.0.0-debian_component_based
               env:
                 - name: POSTGRES_USER
                   valueFrom:
