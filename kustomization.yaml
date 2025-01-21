@@ -8,6 +8,7 @@ resources:
   - project/manifests/psql-deployment.yaml
   - project/manifests/service.yaml
   - project/manifests/secret.yaml
+  - project/manifests/horizontalpodautoscaler.yaml
   # - project/manifests/cronjob.yaml
 
 images:
