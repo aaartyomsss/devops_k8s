@@ -11,7 +11,7 @@ spec:
   maxReplicas: 8
   metrics:
     - type: Resource
-      resources:
+      resource:
         name: memory
         target:
           type: Utilization
