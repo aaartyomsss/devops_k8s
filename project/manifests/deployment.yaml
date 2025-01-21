@@ -15,6 +15,8 @@ spec:
         - name: todo-backend
           image: PROJECT/BACKEND-IMAGE
           resources:
+            requests:
+              memory: "180Mi"
             limits:
               cpu: "150m"
               memory: "256Mi"
@@ -39,6 +41,8 @@ spec:
         - name: todo-frontend
           image: PROJECT/FRONTEND-IMAGE
           resources:
+            requests:
+              memory: "180Mi"
             limits:
               cpu: "150m"
               memory: "256Mi"
