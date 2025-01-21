@@ -15,11 +15,9 @@ spec:
         - name: todo-backend
           image: PROJECT/BACKEND-IMAGE
           resources:
-            requests:
-              memory: "256Mi"
             limits:
               cpu: "150m"
-              memory: "512Mi"
+              memory: "256Mi"
           env:
             - name: PORT
               value: "3000"
@@ -41,8 +39,6 @@ spec:
         - name: todo-frontend
           image: PROJECT/FRONTEND-IMAGE
           resources:
-            requests:
-              memory: "256Mi"
             limits:
               cpu: "150m"
-              memory: "512Mi"
+              memory: "256Mi"
