@@ -89,6 +89,7 @@ app.post("/api/todos", async (req: Request<{}, {}, PostTodo>, res) => {
   const rows = await client.query<{ id: number; text: string }>(
     addTodoQuery(todo)
   )
+  console.log("New todo created !")
   res.json(rows.rows[0])
 })
 
