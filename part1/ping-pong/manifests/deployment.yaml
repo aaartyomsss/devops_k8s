@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: aaartyoms/ping-pong:0.0.20v
+          image: aaartyoms/ping-pong:0.0.32v
           imagePullPolicy: IfNotPresent
           # resources:
           #   limits:
@@ -36,3 +36,10 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_DB
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 10
+            httpGet:
+              path: /healthz
+              port: 4000

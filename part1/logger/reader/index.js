@@ -35,6 +35,11 @@ const getCount = async () => {
   return json
 }
 
+app.get("/healthz", async (_, res) => {
+  const _res = await fetch("http://ping-pong-svc:4444/pingpong")
+  res.status(_res.status).json(_res.body)
+})
+
 app.get("/", async (_req, res) => {
   console.log("Getting a string from file")
   const string = getStamp()

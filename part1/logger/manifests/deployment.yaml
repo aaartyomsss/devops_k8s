@@ -21,15 +21,21 @@ spec:
             name: log-config-map
       containers:
         - name: mylog
-          image: aaartyoms/logger-reader:0.0.9v
+          image: aaartyoms/logger-reader:0.0.29v
           imagePullPolicy: IfNotPresent
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 3000
           volumeMounts:
             - name: shared-log
               mountPath: /usr/src/app/files
             - name: config
               mountPath: /usr/src/app/config
         - name: log-writer
-          image: aaartyoms/logger-writer:0.0.3v
+          image: aaartyoms/logger-writer:0.0.29v
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: shared-log

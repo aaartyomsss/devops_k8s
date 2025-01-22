@@ -8,35 +8,25 @@ import { addCount } from "./queries/count.js"
 dotenv.config()
 await client.connect()
 
-const directory = path.join("/", "usr", "src", "app", "files")
-const filePath = path.join(directory, "count.txt")
+// const directory = path.join("/", "usr", "src", "app", "files")
 
 const app = express()
 const port = 4000
-let count = 0
 
-client.query("SELECT NOW()", (err, res) => {
-  if (err) {
-    console.error("Error connecting to the database:", err)
-  } else {
-    console.log("Database connection successful:", res.rows[0])
-  }
-})
+// const createTableQuery = `
+//       CREATE TABLE IF NOT EXISTS count (
+//         id SERIAL PRIMARY KEY,
+//         count INTEGER
+//       );
+//     `
 
-const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS count (
-        id SERIAL PRIMARY KEY,
-        count INTEGER 
-      );
-    `
-
-client.query(createTableQuery, (err, res) => {
-  if (err) {
-    console.error("Error creating table: ", err)
-  } else {
-    console.log("Created ", res)
-  }
-})
+// client.query(createTableQuery, (err, res) => {
+//   if (err) {
+//     console.error("Error creating table: ", err)
+//   } else {
+//     console.log("Created ", res)
+//   }
+// })
 
 // TODO: Deprecated as per 2.01 instructions
 // const getCount = () => {
@@ -64,6 +54,19 @@ const writeCount = async () => {
 app.get("/pingpong", async (_req, res) => {
   const count = await writeCount()
   res.send(`${count}`)
+})
+
+app.get("/healthz", async (_req, res) => {
+  console.log("Healthz")
+  try {
+    console.log("here")
+    const _res = await client.query("SELECT 1;")
+    console.log(_res)
+    res.status(200).json({ status: "ok" })
+  } catch (error) {
+    console.log("Here actually:", error)
+    res.status(500).json({ error })
+  }
 })
 
 app.get("/", async (_, res) => {
