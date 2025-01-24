@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   name: todo-project-persistent-volume
 spec:
-  storageClassName: todo-project-persistent-volume
+  storageClassName: standard
   capacity:
     storage: 1Gi
   volumeMode: Filesystem
@@ -27,10 +27,10 @@ metadata:
   labels:
     app: postgres
 spec:
-  storageClassName: manual
+  storageClassName: default
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: /var/lib/postgresql/data
+    path: /data/postgresql

@@ -68,6 +68,18 @@ app.get("/", async (_, res) => {
   res.status(200).end()
 })
 
+app.get("/probe", async (_, res) => {
+  console.log("Healthz")
+  try {
+    const _res = await client.query("SELECT 1;")
+    console.log(_res.rows, "Result")
+    res.status(200).json({ status: "ok" })
+  } catch (error) {
+    console.log("Health check error:", error)
+    res.status(500).json({ error })
+  }
+})
+
 app.get("/api", async (_req, res) => {
   await validateImageExistance()
   res.sendFile(filePath)

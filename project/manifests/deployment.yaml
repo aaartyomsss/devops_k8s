@@ -14,6 +14,18 @@ spec:
       containers:
         - name: todo-backend
           image: PROJECT/BACKEND-IMAGE
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            httpGet:
+              path: /probe
+              port: 3000
+          livenessProbe:
+            initialDelaySeconds: 120
+            periodSeconds: 5
+            httpGet:
+              path: /probe
+              port: 3000
           env:
             - name: PORT
               value: "3000"
