@@ -1,5 +1,6 @@
 import pg from "pg"
 import { first_migration } from "../migrations/1_create_table"
+import { second_migration } from "../migrations/2_add_done_field"
 const { Client } = pg
 
 const password = process.env.POSTGRES_PASSWORD
@@ -27,6 +28,14 @@ async function check() {
 check()
 
 client.query(first_migration, (err, res) => {
+  if (err) {
+    console.error("Error migrating:", err)
+  } else {
+    console.log("No issues migrating DB")
+  }
+})
+
+client.query(second_migration, (err, res) => {
   if (err) {
     console.error("Error migrating:", err)
   } else {

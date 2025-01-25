@@ -5,6 +5,7 @@ import axios from "axios"
 type Todo = {
   id: number
   text: string
+  done: boolean
 }
 
 function App() {
@@ -31,8 +32,27 @@ function App() {
     }
   }
 
+  const onSetAsDone = async (t: Todo) => {
+    const newValue = !t.done
+    const res = await axios.put<Todo>(`/api/todos/${t.id}`, { done: newValue })
+    if (res.data.id) {
+      setTodos((oldTodos) =>
+        oldTodos.map((t) => (t.id === res.data.id ? res.data : t))
+      )
+    }
+  }
+
   const renderTodos = () => {
-    return todos.map((t) => <li key={t.id}>{t.text}</li>)
+    return todos.map((t) => (
+      <li key={t.id}>
+        {t.text}
+        <input
+          type="checkbox"
+          checked={t.done}
+          onChange={() => onSetAsDone(t)}
+        />
+      </li>
+    ))
   }
 
   return (

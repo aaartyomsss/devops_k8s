@@ -86,7 +86,7 @@ app.get("/api", async (_req, res) => {
 })
 
 app.get("/api/todos", async (_res, res) => {
-  const todos = await client.query<{ id: number; text: string }>(
+  const todos = await client.query<{ id: number; text: string; done: boolean }>(
     getAllTodosQuery()
   )
   res.json(todos.rows)
@@ -98,12 +98,26 @@ app.post("/api/todos", async (req: Request<{}, {}, PostTodo>, res) => {
     res.status(400).json({ error: "Too long of a todo name" })
     return
   }
-  const rows = await client.query<{ id: number; text: string }>(
+  const rows = await client.query<{ id: number; text: string; done: boolean }>(
     addTodoQuery(todo)
   )
   console.log("New todo created !")
   res.json(rows.rows[0])
 })
+
+app.put(
+  "/api/todos/:id",
+  async (req: Request<{ id: string }, any, { done: boolean }>, res) => {
+    const todoId = Number(req.params.id)
+    const newValue = Boolean(req.body.done)
+    const rows = await client.query(
+      `UPDATE todo SET done = ${newValue} WHERE id = ${todoId}`
+    )
+    const updatedTodo = rows.rows[0]
+    console.log("Updated: ", updatedTodo)
+    res.json(updatedTodo)
+  }
+)
 
 app.listen(port, () => {
   console.log(`Server started in port ${port}`)

@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: todo-rollout
+spec:
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: { duration: 5m }
+        - analysis:
+            templates:
+              - templateName: cpu-rate
+            args:
+              - name: cpu-threshold
+                value: "10"
+        - setWeight: 50
+        - pause: { duration: 5m }
+        - analysis:
+            templates:
+              - templateName: cpu-rate
+            args:
+              - name: cpu-threshold
+                value: "10"
