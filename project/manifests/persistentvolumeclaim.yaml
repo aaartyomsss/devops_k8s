@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: todo-project-pvc-claim
 spec:
-  storageClassName: standard
+  storageClassName: todo-sc
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi

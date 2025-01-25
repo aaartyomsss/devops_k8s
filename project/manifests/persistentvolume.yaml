@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   name: todo-project-persistent-volume
 spec:
-  storageClassName: standard
+  storageClassName: todo-sc
   capacity:
     storage: 1Gi
   volumeMode: Filesystem
