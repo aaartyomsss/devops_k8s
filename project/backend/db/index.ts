@@ -20,7 +20,7 @@ async function check() {
     await client.connect()
     console.log("Connected")
   } catch (error) {
-    console.error("Failed to connect")
+    console.error("Failed to connect ", error)
   }
 }
 

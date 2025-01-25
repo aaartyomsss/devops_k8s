@@ -41,3 +41,11 @@ On the other hand DBaaS solution are generally built in distributed fashion allo
 **Conclusion**
 
 In general, DBaaS solution is the way to go unless there is a very good reason to do otherwise as DBaaS provides good solutions out of the box that will ease the life of development team and make them focus on actual development rather than management of complex systems.
+
+## Part 4
+
+### Exercise 4.03
+
+```
+count(kube_pod_info{namespace="prometheus", created_by_kind="StatefulSet"})
+```

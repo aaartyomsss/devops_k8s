@@ -13,6 +13,6 @@ resources:
 
 images:
   - name: PROJECT/BACKEND-IMAGE
-    newName: aaartyoms/todo-backend:4.03v
+    newName: aaartyoms/todo-backend:4.04v
   - name: PROJECT/FRONTEND-IMAGE
     newName: aaartyoms/todo-frontend:4.02v
