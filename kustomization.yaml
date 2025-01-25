@@ -10,11 +10,14 @@ resources:
   - project/manifests/secret.yaml
   - project/manifests/rollout.yaml
   - project/manifests/analysistemplate.yaml
+  - project/manifests/webhooksecret.yaml
   # - project/manifests/horizontalpodautoscaler.yaml
   # - project/manifests/cronjob.yaml
 
 images:
   - name: PROJECT/BACKEND-IMAGE
-    newName: aaartyoms/todo-backend:4.05v
+    newName: aaartyoms/todo-backend:4.06v
   - name: PROJECT/FRONTEND-IMAGE
     newName: aaartyoms/todo-frontend:4.06v
+  - name: PROJECT/BROADCASTER-IMAGE
+    newName: aaartyoms/todo-broadcaster:4.07v

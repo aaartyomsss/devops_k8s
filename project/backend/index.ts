@@ -8,6 +8,11 @@ import cors from "cors"
 import bodyParser from "body-parser"
 import client from "./db"
 import { addTodoQuery, getAllTodosQuery } from "./queries/todo"
+import NATS from "nats"
+
+const ns = NATS.connect({
+  url: process.env.NATS_URL,
+})
 
 const directory = path.join(__dirname, "usr", "src", "app", "files")
 const filePath = path.join(directory, "img.jpg")
@@ -102,7 +107,12 @@ app.post("/api/todos", async (req: Request<{}, {}, PostTodo>, res) => {
     addTodoQuery(todo)
   )
   console.log("New todo created !")
-  res.json(rows.rows[0])
+  const newTodo = rows.rows[0]
+
+  console.log("Publsihing message: ", JSON.stringify(newTodo))
+  ns.publish("new_todo", JSON.stringify(newTodo))
+
+  res.json(newTodo)
 })
 
 app.put(
